@@ -3,6 +3,7 @@ import { MetricCard } from './component/MetricCard'
 import { StatusBadge } from './component/StatusBadge'
 import type { Metrica } from './types'
 import './App.css'
+import { PaginaPacientes } from './component/PacientesPage'
 
 function App() {
 const [enMantenimiento, setEnMantenimiento] = useState(false)
@@ -103,6 +104,7 @@ const decrementarPacientes = () => setPacientes(prev => Math.max(0, prev - 1))
           </button>
         </div>
       </div>
+      <PaginaPacientes></PaginaPacientes>
     </div>
   </div>
 )
