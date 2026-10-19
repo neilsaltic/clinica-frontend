@@ -2,8 +2,8 @@
 // 1. Mezclaba toda la lógica y el marcado en un solo archivo gigante
 // 2. Los datos de ejemplo estaban escritos directamente en el JSX
 // 3. No respetaba los tipos definidos para EstadoPaciente
-
 import { useState, type ChangeEvent } from 'react'
+import { Link } from 'react-router-dom' // ✅ Agregado
 import type { Paciente, EstadoPaciente } from '../types/paciente'
 import { PacienteCard } from '../component/PacienteCard'
 
@@ -21,7 +21,6 @@ export function PacientesPage() {
   const [pacientes, setPacientes] = useState<Paciente[]>(pacientesIniciales)
   const [busqueda, setBusqueda] = useState('')
   const [filtroEstado, setFiltroEstado] = useState<FiltroEstado>('Todos')
-
   const [nombre, setNombre] = useState('')
   const [apellido, setApellido] = useState('')
   const [email, setEmail] = useState('')
@@ -119,6 +118,13 @@ export function PacientesPage() {
               <button onClick={() => handleEliminar(paciente.id)}
                 className="text-sm px-3 py-1 rounded bg-rose-900/50 text-rose-300 hover:bg-rose-800 transition-colors">Eliminar</button>
             </div>
+            {/* ✅ Enlace agregado — va al detalle del paciente */}
+            <Link
+              to={`/pacientes/${paciente.id}`}
+              className="mt-2 block text-center text-emerald-400 hover:text-emerald-300 text-sm font-medium"
+            >
+              Ver detalle →
+            </Link>
           </div>
         ))}
       </div>
