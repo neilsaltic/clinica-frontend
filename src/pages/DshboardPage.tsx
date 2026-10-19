@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { MetricCard } from '../component/MetricCard'
 import { StatusBadge } from '../component/StatusBadge'
 import type { Metrica } from '../types'
+import { Link } from 'react-router-dom'
 
 interface DashboardPageProps {
   enMantenimiento: boolean
@@ -65,6 +66,12 @@ export function DashboardPage({ enMantenimiento, onToggleMantenimiento }: Dashbo
           </button>
         </div>
       </div>
+      <Link
+  to="/pacientes"
+  className="inline-block mt-4 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-medium transition-colors"
+>
+  Ver Pacientes →
+</Link>
     </div>
   )
 }
