@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MetricCard } from '../component/MetricCard'
 import { StatusBadge } from '../component/StatusBadge'
 import type { Metrica } from '../types'
 import { Link } from 'react-router-dom'
+import { api } from '../libs/axios' // Ajusta según tu ruta
 
 interface DashboardPageProps {
   enMantenimiento: boolean
@@ -10,20 +11,39 @@ interface DashboardPageProps {
 }
 
 export function DashboardPage({ enMantenimiento, onToggleMantenimiento }: DashboardPageProps) {
-  const [pacientes, setPacientes] = useState(128)
-  const [citasHoy] = useState(14)
-  const [consultasPendientes] = useState(7)
-  const [disponibilidad] = useState('98.5%')
+  const [totalPacientes, setTotalPacientes] = useState<number | null>(null)
+  const [totalMedicos, setTotalMedicos] = useState<number | null>(null)
+  const [citasProgramadas, setCitasProgramadas] = useState<number | null>(null)
+  const [citasCompletadas, setCitasCompletadas] = useState<number | null>(null)
+
+  useEffect(() => {
+    // 1. Pacientes
+    api.get('/pacientes')
+      .then((res) => setTotalPacientes(res.data.total ?? res.data.data?.length))
+      .catch((err) => console.error("Error cargando pacientes:", err))
+
+    // 2. Médicos
+    api.get('/medicos')
+      .then((res) => setTotalMedicos(res.data.total ?? res.data.data?.length))
+      .catch((err) => console.error("Error cargando médicos:", err))
+
+    // 3. Citas Programadas
+    api.get('/citas?estado=PROGRAMADA')
+      .then((res) => setCitasProgramadas(res.data.total ?? res.data.data?.length))
+      .catch((err) => console.error("Error cargando citas programadas:", err))
+
+    // 4. Citas Completadas
+    api.get('/citas?estado=COMPLETADA')
+      .then((res) => setCitasCompletadas(res.data.total ?? res.data.data?.length))
+      .catch((err) => console.error("Error cargando citas completadas:", err))
+  }, [])
 
   const metricas: Metrica[] = [
-    { id: 'pacientes', titulo: 'Pacientes', valor: pacientes, descripcion: '+12% vs mes anterior', tendencia: 'positiva', icono: '👥' },
-    { id: 'citas-hoy', titulo: 'Citas Hoy', valor: citasHoy, descripcion: '3 pendientes por confirmar', tendencia: 'neutra', icono: '📅' },
-    { id: 'consultas', titulo: 'Consultas Pendientes', valor: consultasPendientes, descripcion: '-2 respecto a ayer', tendencia: 'negativa', icono: '🩺' },
-    { id: 'disponibilidad', titulo: 'Disponibilidad', valor: disponibilidad, descripcion: 'Todos los sistemas activos', tendencia: 'positiva', icono: '✅' }
+    { id: 'pacientes', titulo: 'Pacientes', valor: totalPacientes ?? '...', descripcion: 'Total registrados', tendencia: 'positiva', icono: '👥' },
+    { id: 'citas-hoy', titulo: 'Citas Programadas', valor: citasProgramadas ?? '...', descripcion: 'Pendientes', tendencia: 'neutra', icono: '📅' },
+    { id: 'consultas', titulo: 'Completadas Hoy', valor: citasCompletadas ?? '...', descripcion: 'Atendidas', tendencia: 'positiva', icono: '🩺' },
+    { id: 'disponibilidad', titulo: 'Médicos', valor: totalMedicos ?? '...', descripcion: 'Activos en el sistema', tendencia: 'positiva', icono: '✅' }
   ]
-
-  const incrementarPacientes = () => setPacientes(prev => prev + 1)
-  const decrementarPacientes = () => setPacientes(prev => Math.max(0, prev - 1))
 
   return (
     <div>
@@ -47,16 +67,6 @@ export function DashboardPage({ enMantenimiento, onToggleMantenimiento }: Dashbo
 
       <div className="bg-gray-800 rounded-lg shadow p-6 border border-gray-700 space-y-6">
         <div>
-          <h2 className="text-lg font-semibold mb-3 text-gray-200">Gestionar Pacientes</h2>
-          <div className="flex items-center gap-4">
-            <button onClick={decrementarPacientes}
-              className="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 text-gray-100 transition-colors text-xl font-bold">−</button>
-            <span className="text-xl font-bold w-20 text-center text-gray-100">{pacientes}</span>
-            <button onClick={incrementarPacientes}
-              className="w-10 h-10 rounded-full bg-emerald-500 text-white hover:bg-emerald-600 transition-colors text-xl font-bold">+</button>
-          </div>
-        </div>
-        <div>
           <h2 className="text-lg font-semibold mb-3 text-gray-200">Modo Mantenimiento</h2>
           <button onClick={onToggleMantenimiento}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -67,11 +77,11 @@ export function DashboardPage({ enMantenimiento, onToggleMantenimiento }: Dashbo
         </div>
       </div>
       <Link
-  to="/pacientes"
-  className="inline-block mt-4 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-medium transition-colors"
->
-  Ver Pacientes →
-</Link>
+        to="/pacientes"
+        className="inline-block mt-4 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-medium transition-colors"
+      >
+        Ver Pacientes →
+      </Link>
     </div>
   )
 }
