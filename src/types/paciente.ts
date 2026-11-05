@@ -1,12 +1,9 @@
 export type EstadoPaciente = "activo" | "inactivo" | "en_espera";
 
 export interface Paciente {
-  id: string;
+  id: number | string;
   nombre: string;
   apellido: string;
   email: string;
-  telefono: string;
-  especialidadAsignada: string;
-  ultimaCita: string;
-  estado: EstadoPaciente;
+  fechaNacimiento?: string; // 👈 Añade esta línea
 }
