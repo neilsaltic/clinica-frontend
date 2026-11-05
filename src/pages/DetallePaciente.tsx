@@ -1,32 +1,61 @@
-import { useParams, useNavigate, Link } from 'react-router-dom'
-import type { Paciente } from '../types/paciente'
-import { BadgeEstado } from '../component/badgeEstado'
-import { NotFoundPage } from './NotFoundPage'
+import { useParams, useNavigate, Link } from "react-router-dom";
+import type { Paciente } from "../types/paciente";
+import { NotFoundPage } from "./NotFoundPage";
 
-// Datos compartidos (mover a un archivo central después)
+// Datos mock limpios que coinciden exactamente con la interfaz Paciente
 const PACIENTES_INICIALES: Paciente[] = [
-  { id: 'p1', nombre: 'María', apellido: 'González', email: 'maria.g@clinicasalud.com', telefono: '+591 777 12345', especialidadAsignada: 'Medicina General', ultimaCita: '2026-10-10', estado: 'activo' },
-  { id: 'p2', nombre: 'Juan', apellido: 'Pérez', email: 'juan.p@clinicasalud.com', telefono: '+591 777 67890', especialidadAsignada: 'Cardiología', ultimaCita: '2026-10-08', estado: 'en_espera' },
-  { id: 'p3', nombre: 'Ana', apellido: 'Rodríguez', email: 'ana.r@clinicasalud.com', telefono: '+591 777 54321', especialidadAsignada: 'Dermatología', ultimaCita: '2026-09-15', estado: 'inactivo' },
-  { id: 'p4', nombre: 'Carlos', apellido: 'Mendoza', email: 'carlos.m@clinicasalud.com', telefono: '+591 777 98765', especialidadAsignada: 'Traumatología', ultimaCita: '2026-10-12', estado: 'activo' },
-  { id: 'p5', nombre: 'Sofía', apellido: 'Vásquez', email: 'sofia.v@clinicasalud.com', telefono: '+591 777 45678', especialidadAsignada: 'Pediatría', ultimaCita: '2026-10-05', estado: 'en_espera' }
-]
+  {
+    id: "p1",
+    nombre: "María",
+    apellido: "González",
+    email: "maria.g@clinicasalud.com",
+    fechaNacimiento: "1990-05-12",
+  },
+  {
+    id: "p2",
+    nombre: "Juan",
+    apellido: "Pérez",
+    email: "juan.p@clinicasalud.com",
+    fechaNacimiento: "1985-08-20",
+  },
+  {
+    id: "p3",
+    nombre: "Ana",
+    apellido: "Rodríguez",
+    email: "ana.r@clinicasalud.com",
+    fechaNacimiento: "1992-03-15",
+  },
+  {
+    id: "p4",
+    nombre: "Carlos",
+    apellido: "Mendoza",
+    email: "carlos.m@clinicasalud.com",
+    fechaNacimiento: "1998-11-30",
+  },
+  {
+    id: "p5",
+    nombre: "Sofía",
+    apellido: "Vásquez",
+    email: "sofia.v@clinicasalud.com",
+    fechaNacimiento: "1995-07-22",
+  },
+];
 
 export function DetallePacientePage() {
-  const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
-  const paciente = PACIENTES_INICIALES.find(p => p.id === id)
+  const paciente = PACIENTES_INICIALES.find((p) => String(p.id) === String(id));
 
   if (!paciente) {
-    return <NotFoundPage />
+    return <NotFoundPage />;
   }
 
   return (
     <div className="max-w-2xl mx-auto">
       <button
         onClick={() => navigate(-1)}
-        className="mb-6 text-emerald-400 hover:text-emerald-300 font-medium"
+        className="mb-6 text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
       >
         ← Volver
       </button>
@@ -36,14 +65,17 @@ export function DetallePacientePage() {
           <h1 className="text-3xl font-bold text-gray-100">
             {paciente.nombre} {paciente.apellido}
           </h1>
-          <BadgeEstado estado={paciente.estado} />
         </div>
 
         <div className="space-y-4 text-lg text-gray-300">
-          <p><strong className="text-gray-100">📧 Email:</strong> {paciente.email}</p>
-          <p><strong className="text-gray-100">📞 Teléfono:</strong> {paciente.telefono || 'No registrado'}</p>
-          <p><strong className="text-gray-100">🏥 Especialidad:</strong> {paciente.especialidadAsignada}</p>
-          <p><strong className="text-gray-100">📅 Última cita:</strong> {paciente.ultimaCita}</p>
+          <p>
+            <strong className="text-gray-100">📧 Email:</strong>{" "}
+            {paciente.email}
+          </p>
+          <p>
+            <strong className="text-gray-100">📅 Fecha de Nacimiento:</strong>{" "}
+            {paciente.fechaNacimiento || "No registrada"}
+          </p>
         </div>
 
         <div className="mt-8 flex gap-4">
@@ -62,5 +94,5 @@ export function DetallePacientePage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
