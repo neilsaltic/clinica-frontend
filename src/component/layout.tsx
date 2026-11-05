@@ -51,6 +51,14 @@ export function Layout() {
             👥 Pacientes
           </NavLink>
           <NavLink
+            to="/citas"
+            className={({ isActive }) =>
+              `block px-4 py-2.5 rounded-lg transition-colors ${isActive ? linkActivo : linkInactivo}`
+            }
+          >
+            📋 Ver Citas
+          </NavLink>
+          <NavLink
             to="/citas/nueva"
             className={({ isActive }) =>
               `block px-4 py-2.5 rounded-lg transition-colors ${isActive ? linkActivo : linkInactivo}`

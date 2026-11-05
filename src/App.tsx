@@ -10,6 +10,7 @@ import { PaginaSinAcceso } from "./pages/PaginaSinAcceso";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { RutaProtegida } from "./component/rutaprotegida";
 import { ReportesPage } from "./pages/ReportesPage";
+import { CitasPage } from "./pages/CitasPage";
 
 function App() {
   const [enMantenimiento, setEnMantenimiento] = useState(false);
@@ -37,6 +38,7 @@ function App() {
           <Route path="/pacientes" element={<PacientesPage />} />
           <Route path="/pacientes/:id" element={<DetallePacientePage />} />
           <Route path="/citas/nueva" element={<NuevaCitaPage />} />
+          <Route path="/citas" element={<CitasPage />} />
           <Route path="/sin-acceso" element={<PaginaSinAcceso />} />
 
           {/* Ejemplo de ruta exclusiva para GERENCIA o ADMIN */}
